@@ -1,3 +1,12 @@
+#template files
+app*
+usb*
+system*
+io_mapping.h
+nbproject
+.vscode
+umogi*
+Makefile
 # Prerequisites
 *.d
 
