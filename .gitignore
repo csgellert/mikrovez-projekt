@@ -7,6 +7,20 @@ nbproject
 .vscode
 umogi*
 Makefile
+#windows program files
+app*
+stdafx*
+*sln
+*vcxproj*
+*.txt
+resource.h 
+WindowsForm.cpp
+Form1.cpp
+Form1.resx
+AssemblyInfo.cpp
+*Debug
+*Release
+*.vs
 # Prerequisites
 *.d
 
