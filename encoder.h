@@ -1,6 +1,7 @@
 #ifndef __ABIENCODER_H__
 #define __ABIENCODER_H__
-
+#include <xc.h>   
+#include "umogi2.h"
 // Commands to LS7366R
 #define OP_CLEAR                	0b00000000
 #define OP_READ                 	0b01000000
@@ -66,5 +67,6 @@ void Init_encoder(void);
 void write_encoder(BYTE write_register, BYTE data);
 BYTE read_encoder(BYTE read_register);
 BYTE read_counter(void);
+unsigned int read_cntr(BYTE read_register);//,BYTE*t, int darab);
 
 #endif	// __ABIENCODER_H__
