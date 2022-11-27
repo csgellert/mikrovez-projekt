@@ -1,14 +1,4 @@
-/***********************************************************
-File name: 05_serial.ino
-Description: If you send a character ‘1’ or ‘0’ on the 
-             serial monitor, the status of LED will be lit 
-             or gone out.
-Website: www.adeept.com
-E-mail: support@adeept.com
-Author: Tom
-Date: 2015/05/02 
-***********************************************************/
-float a = 0;
+int a = 0;
 void setup()
 {
   Serial.begin(9600);   // opens serial port, sets data rate to 9600 bps
