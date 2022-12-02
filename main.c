@@ -11,6 +11,8 @@
 #include "usb_device.h"
 #include "usb_device_cdc.h"
 
+BYTE counter_result;
+unsigned long int cntr_result = 0;
 void __attribute__((__interrupt__, __auto_psv__)) _T1Interrupt (void)
 {
     // timer1: 1 hz.
@@ -66,12 +68,14 @@ MAIN_RETURN main(void)
     
     // set mode
     write_encoder(REG_MDR0, MDR0_B1B0_CLOCK_DIR | MDR0_B3B2_RANGE_LIMIT | MDR0_B5B4_NO_INDEX | MDR0_B6_ASYNC_INDEX | MDR0_B7_FILTER_CLOCK_F1 );
-    write_encoder(REG_MDR1 ,MDR1_B1B0_COUNT_8_BITS | MDR1_B2_ENABLE_COUNTING);
+    write_encoder(REG_MDR1 ,MDR1_B1B0_COUNT_16_BITS | MDR1_B2_ENABLE_COUNTING);
     //write_encoder(REG_DTR,0xff);
     CS2 = 0; //select encoder
     WriteSPI1(OP_WRITE | REG_DTR); 
+    WriteSPI1(0x01); // write data
     WriteSPI1(0xff); // write data
-    WriteSPI1(0xff); // write data
+    //WriteSPI1(0xff); // write data
+    //WriteSPI1(0xff); // write data
     CS2 = 1;
     
     sprintf(lcd,"SPI ready");
@@ -83,8 +87,7 @@ MAIN_RETURN main(void)
     USBDeviceAttach();
     
     
-    BYTE counter_result;
-    unsigned int cntr_result;
+    
     
     counter_result = read_encoder(REG_STR);
     //counter_result =read_counter();
@@ -101,8 +104,14 @@ MAIN_RETURN main(void)
         WriteSPI1(OP_LOAD | REG_OTR); 
         CS2 = 1;
         cntr_result = read_cntr(REG_OTR);
+        //sprintf(lcd+lcd_cpl,"cntr= %i",sizeof(cntr_result));
+        //lcd_update();
+        Nop();
+        Nop();
+        Nop();
+        Nop();
         //sprintf(lcd,"counter= %i",counter_result);
-        sprintf(lcd,"counter= %x",cntr_result);
+        sprintf(lcd,"cntr= %lx",cntr_result);
         lcd_update();
         __delay_ms(100);
        //Application specific tasks

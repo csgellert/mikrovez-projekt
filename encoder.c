@@ -28,11 +28,15 @@ BYTE read_encoder(BYTE read_register)
 unsigned int read_cntr(BYTE read_register)//,BYTE*t, int darab)
 {
     BYTE tmp;
-    unsigned int i;
+    unsigned long int i = 0;
     CS2 = 0; //select encoder
     WriteSPI1(OP_READ | read_register);
+    //tmp = WriteSPI1(0);
+    //i = i|(tmp<<24);
+    //tmp = WriteSPI1(0);
+    //i = i|(tmp<<16);
     tmp = WriteSPI1(0);
-    i=tmp<<8;
+    i = i|(tmp<<8);
     tmp = WriteSPI1(0);
     i = i|(tmp);
     CS2 = 1;

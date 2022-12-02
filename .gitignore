@@ -1,5 +1,5 @@
 #template files
-app*
+#app*
 usb*
 system*
 io_mapping.h
@@ -8,7 +8,8 @@ nbproject
 umogi*
 Makefile
 #windows program files
-app*
+app.ico
+app.rc
 stdafx*
 *sln
 *vcxproj*

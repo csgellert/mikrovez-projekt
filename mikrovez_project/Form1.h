@@ -191,7 +191,7 @@ namespace WindowsForm {
 		double cp_y = 100;
 		double r = 50;
 		double delta_phi = 2 * PI / 6;
-		fg->Clear(System::Drawing::SystemColors::Control); //alap szÌn
+		fg->Clear(System::Drawing::SystemColors::Control); //alap sz√≠n
 		ecset = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Red);
 		Point point1 = Point(cp_x + r*cos(angle_corr), cp_y+r*sin(angle_corr));
 		Point point2 = Point(cp_x + r * cos(angle_corr+delta_phi), cp_y + r * sin(angle_corr+delta_phi));
@@ -220,9 +220,9 @@ namespace WindowsForm {
 	}
 	
 private: System::Void Form1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-	//paint: ˙jra festi a formot
+	//paint: √∫jra festi a formot
 	fg = this->CreateGraphics();// gragika a formra
-	//fg->Clear(System::Drawing::SystemColors::Control); //alap szÌn
+	//fg->Clear(System::Drawing::SystemColors::Control); //alap sz√≠n
 }
 };
 }
