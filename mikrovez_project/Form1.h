@@ -90,10 +90,10 @@ namespace WindowsForm {
 			// 
 			this->statusStrip1->ImageScalingSize = System::Drawing::Size(20, 20);
 			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripStatusLabel1 });
-			this->statusStrip1->Location = System::Drawing::Point(0, 443);
+			this->statusStrip1->Location = System::Drawing::Point(0, 629);
 			this->statusStrip1->Name = L"statusStrip1";
 			this->statusStrip1->Padding = System::Windows::Forms::Padding(1, 0, 19, 0);
-			this->statusStrip1->Size = System::Drawing::Size(675, 26);
+			this->statusStrip1->Size = System::Drawing::Size(659, 26);
 			this->statusStrip1->TabIndex = 7;
 			this->statusStrip1->Text = L"statusStrip1";
 			// 
@@ -116,7 +116,7 @@ namespace WindowsForm {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(675, 469);
+			this->ClientSize = System::Drawing::Size(659, 655);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->statusStrip1);
 			this->Margin = System::Windows::Forms::Padding(4);
@@ -182,34 +182,47 @@ namespace WindowsForm {
 		}
 		 this->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &Form1::Form1_Paint);
 		 toll = gcnew System::Drawing::Pen(System::Drawing::Color::Black,1);
-		 ecset = gcnew System::Drawing::SolidBrush(System::Drawing::Color::Black);
+		 vastag = gcnew System::Drawing::Pen(System::Drawing::Color::Black, 2);
+		 ecset = gcnew System::Drawing::SolidBrush(System::Drawing::SystemColors::Control);
 
 	}
 	Graphics^ fg;//form grafika
 	Graphics^ fg2;//form grafika
 	Pen^ toll;
+	Pen^ vastag;
 	System::Drawing::Font^ karakterkeszlet;
 	System::Drawing::Brush^ ecset;
 	int currant_rotation = 0;
 	double ground_pos = 400;
-	double fej_heigth = 20;
+	double fej_heigth = 30;
 	double szar_length = 200;
 	double alatet_h = 10;
+	double furat = 50;
+	double center_pos = 250;
 	void animate_screw(int angle)
 	{
 		fg->Clear(System::Drawing::SystemColors::Control); //alap szín
-		//fg->DrawImage(image, 0, 0, image->Size.Width, image->Size.Height);
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(225, ground_pos-10 , 50, 10));//alátét
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(100,ground_pos , 400, 150));//felső test
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(100, ground_pos+150, 400, 200));//alsó test
+		//fg->DrawImage(image, 0, 0, image->Size.Width, image->Size.Height
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(100,ground_pos , 300, 150));//felső test
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(100, ground_pos+150, 300, 200));//alsó test
+		fg->DrawRectangle(toll, System::Drawing::Rectangle(center_pos - (int)(furat / 2), ground_pos+150, furat, -alatet_h-150+szar_length+30));//furat menet
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(center_pos  - 5 -(int)(furat / 2), ground_pos, furat + 10, 150));//furat
+		fg->DrawLine(vastag,Point( center_pos - (int)(furat / 2), ground_pos + szar_length + 20),Point( center_pos + (int)(furat / 2), ground_pos + szar_length + 20));//belso menet vég
+		Point point1 = Point(center_pos + 10 - (int)(furat / 2), ground_pos+szar_length+30);
+		Point point2 = Point(center_pos, ground_pos + szar_length + 35);
+		Point point3 = Point(center_pos - 10 + (int)(furat / 2), ground_pos + szar_length + 30);
+		array<Point>^ curvePoints = { point1,point2,point3};
+		fg->DrawPolygon(vastag, curvePoints);//háromszög
 		rotate_screw(angle);
 		vertical_movement(angle);
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(center_pos-65, ground_pos - 10, 130, 10));//alátét
+		fg->FillRectangle(ecset, System::Drawing::Rectangle(center_pos-64, ground_pos - 10 + 1, 130 -2, 10-2));//alátét fill
 	}
 	void rotate_screw(int angle)
 	{
 		double angle_corr = (double)angle * 2*PI / 1023;
 		double heigth_corr  = (double)angle * szar_length / 1023;
-		double cp_x = 250;
+		double cp_x = center_pos;
 		double cp_y = 100;
 		double r = 50;
 		double delta_phi = 2 * PI / 6;
@@ -222,14 +235,14 @@ namespace WindowsForm {
 		Point point5 = Point(cp_x + r * cos(angle_corr + delta_phi * 4), cp_y + r * sin(angle_corr + delta_phi * 4));
 		Point point6 = Point(cp_x + r * cos(angle_corr + delta_phi * 5), cp_y + r * sin(angle_corr + delta_phi * 5));
 		array<Point>^ curvePoints = { point1,point2,point3,point4,point5,point6};
-		fg->DrawPolygon(toll, curvePoints);
+		fg->DrawPolygon(vastag, curvePoints);
 		double xc,yc;
-		xc = r*sin(angle_corr); yc = r * cos(angle_corr); if (xc > 0 || fabs(yc)>r*cos(PI/6))					   { int tmp = (int)(cp_x + r * cos(angle_corr)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
-		xc = r*sin(angle_corr + delta_phi*1); yc = r * cos(angle_corr + delta_phi * 1); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi*1)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
-		xc = r*sin(angle_corr + delta_phi*2); yc = r * cos(angle_corr + delta_phi * 2); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 2)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
-		xc = r*sin(angle_corr + delta_phi*3); yc = r * cos(angle_corr + delta_phi * 3); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 3)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
-		xc = r*sin(angle_corr + delta_phi*4); yc = r * cos(angle_corr + delta_phi * 4); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 4)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
-		xc = r*sin(angle_corr + delta_phi*5); yc = r * cos(angle_corr + delta_phi * 5); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr+ delta_phi*5)); fg->DrawLine(toll, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr); yc = r * cos(angle_corr); if (xc > 0 || fabs(yc)>r*cos(PI/6))					   { int tmp = (int)(cp_x + r * cos(angle_corr)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr + delta_phi*1); yc = r * cos(angle_corr + delta_phi * 1); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi*1)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr + delta_phi*2); yc = r * cos(angle_corr + delta_phi * 2); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 2)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr + delta_phi*3); yc = r * cos(angle_corr + delta_phi * 3); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 3)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr + delta_phi*4); yc = r * cos(angle_corr + delta_phi * 4); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr + delta_phi * 4)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
+		xc = r*sin(angle_corr + delta_phi*5); yc = r * cos(angle_corr + delta_phi * 5); if (xc > 0 || fabs(yc) > r * cos(PI / 6)) { int tmp = (int)(cp_x + r * cos(angle_corr+ delta_phi*5)); fg->DrawLine(vastag, Point(tmp, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr), Point(tmp, ground_pos - (szar_length + alatet_h) + (int)heigth_corr)); }
 		double max_pos = -1000;
 		double min_pos = 1000;
 		int i;
@@ -244,7 +257,7 @@ namespace WindowsForm {
 				min_pos = cp_x + r * cos(angle_corr + delta_phi * i);
 			}
 		}
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(min_pos, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr, max_pos - min_pos, fej_heigth));
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(min_pos, ground_pos - (szar_length + fej_heigth + alatet_h) + (int)heigth_corr, max_pos - min_pos, fej_heigth));
 		
 		
 	}
@@ -252,14 +265,18 @@ namespace WindowsForm {
 	{
 		double angle_corr = (double)angle *szar_length/ 1023;
 		//fg->DrawRectangle(toll, System::Drawing::Rectangle(200,ground_pos-(szar_length+fej_heigth+alatet_h)+(int)angle_corr,100,fej_heigth));//fej
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(235, ground_pos- (szar_length + alatet_h) + (int)angle_corr, 30, szar_length));//szár
-		fg->DrawRectangle(toll, System::Drawing::Rectangle(240, ground_pos - (szar_length + alatet_h) + (int)angle_corr, 20, szar_length+5));//szár
-		Point point1 = Point(235,ground_pos -  alatet_h + (int)angle_corr);
-		Point point2 = Point(240, ground_pos - alatet_h +5+ (int)angle_corr);
-		Point point3 = Point(260, ground_pos - alatet_h +5+ (int)angle_corr);
-		Point point4 = Point(265, ground_pos - alatet_h + (int)angle_corr);
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(center_pos-(int)(furat/2), ground_pos- (szar_length + alatet_h) + (int)angle_corr, furat, szar_length));//szár
+		fg->FillRectangle(ecset, System::Drawing::Rectangle(center_pos - (int)(furat / 2)+1, ground_pos - (szar_length + alatet_h)+1 + (int)angle_corr, furat-2, szar_length-2));//erease inside of szár
+		fg->DrawRectangle(toll, System::Drawing::Rectangle(center_pos+5 - (int)(furat / 2), ground_pos+10 - (szar_length + alatet_h) + (int)angle_corr, furat-10, szar_length+5-10));//szár menet
+		fg->DrawLine(vastag, Point(center_pos - (int)(furat / 2), ground_pos + 10 - (szar_length + alatet_h) + (int)angle_corr),Point( center_pos - (int)(furat / 2) + furat, ground_pos + 10 - (szar_length + alatet_h) + (int)angle_corr));
+		Point point1 = Point(center_pos - (int)(furat / 2),ground_pos -  alatet_h + (int)angle_corr);
+		Point point2 = Point(center_pos +5- (int)(furat / 2), ground_pos - alatet_h +5+ (int)angle_corr);
+		Point point3 = Point(center_pos -5+ (int)(furat / 2), ground_pos - alatet_h +5+ (int)angle_corr);
+		Point point4 = Point(center_pos + (int)(furat / 2), ground_pos - alatet_h + (int)angle_corr);
 		array<Point>^ curvePoints = { point1,point2,point3,point4};
-		fg->DrawPolygon(toll, curvePoints);
+		fg->DrawPolygon(vastag, curvePoints);//trapez
+		double felsopont = (ground_pos + 5 - alatet_h + (int)angle_corr > ground_pos + 150) ? ground_pos + 5 - alatet_h + (int)angle_corr : ground_pos + 150;
+		fg->DrawRectangle(vastag, System::Drawing::Rectangle(center_pos + 5 - (int)(furat / 2), felsopont, furat - 10, ground_pos-felsopont+ szar_length -alatet_h+40));//furat belso
 
 	}
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e)
