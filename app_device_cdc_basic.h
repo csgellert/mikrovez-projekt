@@ -25,6 +25,7 @@ please contact mla_licensing@microchip.com
 
 #include "usb_device_cdc.h"
 #include "umogi2.h"
+#include "encoder.h"
 extern unsigned long int cntr_result;
 /*********************************************************************
 * Function: void APP_DeviceCDCBasicDemoInitialize(void);

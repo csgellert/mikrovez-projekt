@@ -72,15 +72,15 @@ MAIN_RETURN main(void)
     //write_encoder(REG_DTR,0xff);
     CS2 = 0; //select encoder
     WriteSPI1(OP_WRITE | REG_DTR); 
-    WriteSPI1(0x01); // write data
-    WriteSPI1(0xff); // write data
+    WriteSPI1(0x0f); // write data
+    WriteSPI1(0xfc); // write data
     //WriteSPI1(0xff); // write data
     //WriteSPI1(0xff); // write data
     CS2 = 1;
     
-    sprintf(lcd,"SPI ready");
-    lcd_update();
-    lcd_cls();
+    //sprintf(lcd,"SPI ready");
+    //lcd_update();
+    //lcd_cls();
     SYSTEM_Initialize(SYSTEM_STATE_USB_START);
 
     USBDeviceInit();
@@ -89,31 +89,27 @@ MAIN_RETURN main(void)
     
     
     
-    counter_result = read_encoder(REG_STR);
+    //counter_result = read_encoder(REG_STR);
     //counter_result =read_counter();
-    sprintf(lcd,"counter %i",counter_result);
-    lcd_update();
+    //sprintf(lcd,"counter %i",counter_result);
+    //lcd_update();
     while(1)
     {
         SYSTEM_Tasks();
         Nop();
         //counter_result = read_counter();//read_encoder(REG_MDR1);
-        lcd_cls();
+        //lcd_cls();
         //counter_result = read_encoder(REG_CNTR);
-        CS2 = 0; //select encoder
-        WriteSPI1(OP_LOAD | REG_OTR); 
-        CS2 = 1;
-        cntr_result = read_cntr(REG_OTR);
         //sprintf(lcd+lcd_cpl,"cntr= %i",sizeof(cntr_result));
         //lcd_update();
-        Nop();
-        Nop();
-        Nop();
-        Nop();
+        //Nop();
+        //Nop();
+        //Nop();
+        //Nop();
         //sprintf(lcd,"counter= %i",counter_result);
-        sprintf(lcd,"cntr= %lx",cntr_result);
-        lcd_update();
-        __delay_ms(100);
+        //sprintf(lcd,"cntr= %lx",cntr_result);
+        //lcd_update();
+        //__delay_ms(100);
        //Application specific tasks
         APP_DeviceCDCBasicDemoTasks();
     }//end while

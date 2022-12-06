@@ -105,10 +105,14 @@ void APP_DeviceCDCBasicDemoTasks()
                     strcpy((char *)writeBuffer,"uMogi-2\r\n");
                     break;
                 case 'e':
-                    strcpy((char *)writeBuffer,"2\r\n");
+                    //strcpy((char *)writeBuffer,"2\r\n");
                     LEDG = !LEDG;
+                    CS2 = 0; //select encoder
+                    WriteSPI1(OP_LOAD | REG_OTR); 
+                    CS2 = 1;
+                    cntr_result = read_cntr(REG_OTR);
                     //int test = 3;
-                    sprintf((char *)writeBuffer,"%i\r\n",cntr_result);
+                    sprintf((char *)writeBuffer,"%lu\r\n",cntr_result);
                     break;
                 default:
                     strcpy((char *)writeBuffer,"?\r\n");

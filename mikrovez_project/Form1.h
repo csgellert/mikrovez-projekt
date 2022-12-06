@@ -186,6 +186,7 @@ namespace WindowsForm {
 		 ecset = gcnew System::Drawing::SolidBrush(System::Drawing::SystemColors::Control);
 
 	}
+	unsigned int max_rotation = 1023;
 	Graphics^ fg;//form grafika
 	Graphics^ fg2;//form grafika
 	Pen^ toll;
@@ -220,8 +221,8 @@ namespace WindowsForm {
 	}
 	void rotate_screw(int angle)
 	{
-		double angle_corr = (double)angle * 2*PI / 1023;
-		double heigth_corr  = (double)angle * szar_length / 1023;
+		double angle_corr = (double)angle * 2*PI / max_rotation;
+		double heigth_corr  = (double)angle * szar_length / max_rotation;
 		double cp_x = center_pos;
 		double cp_y = 100;
 		double r = 50;
@@ -263,7 +264,7 @@ namespace WindowsForm {
 	}
 	void vertical_movement(int angle)
 	{
-		double angle_corr = (double)angle *szar_length/ 1023;
+		double angle_corr = (double)angle *szar_length/ max_rotation;
 		//fg->DrawRectangle(toll, System::Drawing::Rectangle(200,ground_pos-(szar_length+fej_heigth+alatet_h)+(int)angle_corr,100,fej_heigth));//fej
 		fg->DrawRectangle(vastag, System::Drawing::Rectangle(center_pos-(int)(furat/2), ground_pos- (szar_length + alatet_h) + (int)angle_corr, furat, szar_length));//szár
 		fg->FillRectangle(ecset, System::Drawing::Rectangle(center_pos - (int)(furat / 2)+1, ground_pos - (szar_length + alatet_h)+1 + (int)angle_corr, furat-2, szar_length-2));//erease inside of szár
@@ -304,15 +305,20 @@ namespace WindowsForm {
 				MessageBox::Show("No uMogi-2.", "Error", MessageBoxButtons::OK);
 				Application::Exit();
 			}
-			label1->Text = s;
-			//Console::WriteLine(L"%i",s);
-			//s = "42";
-			//s = label1->Text;
-			if (abs(Convert::ToInt32(s) - currant_rotation) > 2)
+			//label1->Text = s;
+			int tmp = Convert::ToInt64(s);
+			unsigned tmp2 = tmp;
+			currant_rotation = tmp2;// Convert::ToUInt64(s);
+			if (abs(tmp - currant_rotation) > 2)
 			{
-				currant_rotation = Convert::ToInt32(s);
-				animate_screw(currant_rotation);
+				//currant_rotation = Convert::ToInt32(s);
+				//animate_screw(currant_rotation);
+				
+				label1->Text = Convert::ToString(tmp2);
+				animate_screw(tmp2);
 			}
+			
+			
 		}
 	}
 	
